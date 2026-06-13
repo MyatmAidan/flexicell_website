@@ -1,0 +1,122 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --fc-red: #e31e24;
+  --fc-red-dark: #c4191f;
+  --fc-red-light: #fde8e9;
+  --fc-bg: #f4f6f9;
+  --fc-surface: #ffffff;
+  --fc-border: #e5e7eb;
+  --fc-text: #1f2937;
+  --fc-text-muted: #6b7280;
+  --fc-sidebar-bg: #1a1d21;
+  --fc-sidebar-text: #a0aec0;
+  --fc-sidebar-active: #ffffff;
+  --fc-radius: 8px;
+  --fc-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --fc-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+html,
+body,
+#app {
+  min-height: 100vh;
+}
+
+body {
+  font-family: var(--fc-font);
+  color: var(--fc-text);
+  background: var(--fc-bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--fc-red);
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--fc-red-dark);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.alert {
+  padding: 0.875rem 1rem;
+  border-radius: var(--fc-radius);
+  margin-bottom: 1rem;
+}
+
+.alert-warning {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.alert-danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--fc-red-light);
+  color: var(--fc-red);
+  text-transform: capitalize;
+}

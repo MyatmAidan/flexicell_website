@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import PageCard from '@/components/ui/PageCard.vue'
 import ImageCropInput from '@/components/ui/ImageCropInput.vue'
-import { phoneModelsApi } from '@/api/phoneModels'
+import { phoneModelsApi, type PhoneModel } from '@/api/phoneModels'
 import { brandsApi, type Brand } from '@/api/brands'
 import { categoriesApi, type Category } from '@/api/categories'
 import { useNotify } from '@/composables/useNotify'
@@ -16,10 +16,18 @@ const route = useRoute()
 const router = useRouter()
 const { success, error: notifyError } = useNotify()
 
-const id = computed(() => (route.params.id ? Number(route.params.id) : null))
-const isEdit = computed(() => !!id.value && route.name === 'phone-models-edit')
+const id = computed(() => {
+  const raw = route.params.id
+  if (!raw || Array.isArray(raw)) return null
+  const parsed = Number(raw)
+  return Number.isFinite(parsed) ? parsed : null
+})
 
-const loading = ref(false)
+const isEdit = computed(
+  () => (route.name === 'phone-models-edit' || String(route.path).endsWith('/edit')) && id.value != null,
+)
+
+const loading = ref(true)
 const saving = ref(false)
 const brands = ref<Brand[]>([])
 const categories = ref<Category[]>([])
@@ -27,15 +35,41 @@ const imageFiles = ref<File[]>([])
 const imagePreviews = ref<string[]>([])
 const existingImages = ref<string[]>([])
 
-const form = ref({
-  name: '',
-  brand_id: '' as string | number,
-  category_id: '' as string | number,
-  processor: '',
-  battery_capacity: '' as string | number,
-  release_year: '' as string | number,
-  description: '',
-})
+function emptyFormData() {
+  return {
+    name: '',
+    brand_id: '' as string | number,
+    category_id: '' as string | number,
+    processor: '',
+    battery_capacity: '' as string | number,
+    release_year: '' as string | number,
+    description: '',
+  }
+}
+
+const formData = ref(emptyFormData())
+
+function resetFormData() {
+  formData.value = emptyFormData()
+  imageFiles.value = []
+  imagePreviews.value = []
+  existingImages.value = []
+}
+
+function applyModel(model: PhoneModel) {
+  formData.value.name = model.model_name ?? ''
+  formData.value.brand_id = model.brand_id
+  formData.value.category_id = model.category_id ?? ''
+  formData.value.processor = model.processor ?? ''
+  formData.value.battery_capacity = model.battery_capacity ?? ''
+  formData.value.release_year = model.release_year ?? ''
+  formData.value.description = Array.isArray(model.description)
+    ? (model.description as { key?: string; value?: string }[]).map((d) => d.value).filter(Boolean).join('\n')
+    : ''
+  existingImages.value = model.image_urls ?? []
+  imageFiles.value = []
+  imagePreviews.value = []
+}
 
 async function loadOptions() {
   const [brandsRes, categoriesRes] = await Promise.all([
@@ -48,26 +82,28 @@ async function loadOptions() {
 
 async function loadModel() {
   if (!id.value) return
+  const res = await phoneModelsApi.get(id.value)
+  if (res.success && res.data) {
+    applyModel(res.data)
+    return
+  }
+  throw new Error(res.message || 'Failed to load phone model')
+}
+
+async function bootstrap() {
   loading.value = true
   try {
-    const res = await phoneModelsApi.get(id.value)
-    if (res.success && res.data) {
-      const m = res.data
-      form.value = {
-        name: m.model_name,
-        brand_id: m.brand_id,
-        category_id: m.category_id ?? '',
-        processor: m.processor ?? '',
-        battery_capacity: m.battery_capacity ?? '',
-        release_year: m.release_year ?? '',
-        description: Array.isArray(m.description)
-          ? (m.description as { key?: string; value?: string }[]).map((d) => d.value).filter(Boolean).join('\n')
-          : '',
-      }
-      existingImages.value = m.image_urls ?? []
+    await loadOptions()
+    if (isEdit.value) {
+      await loadModel()
+    } else {
+      resetFormData()
     }
   } catch (e) {
     notifyError(getApiErrorMessage(e))
+    if (isEdit.value) {
+      router.push('/admin/phone-models')
+    }
   } finally {
     loading.value = false
   }
@@ -78,19 +114,36 @@ function onImagesSelected(files: File[]) {
   imagePreviews.value = files.map((f) => URL.createObjectURL(f))
 }
 
+function imageFilenameFromUrl(url: string): string | null {
+  const parts = url.split('/')
+  const filename = parts[parts.length - 1]
+  return filename || null
+}
+
 function buildFormData() {
   const fd = new FormData()
-  fd.append('name', form.value.name)
-  fd.append('brand_id', String(form.value.brand_id))
-  if (form.value.category_id) fd.append('category_id', String(form.value.category_id))
-  fd.append('processor', form.value.processor)
-  fd.append('battery_capacity', String(form.value.battery_capacity))
-  if (form.value.release_year) fd.append('release_year', String(form.value.release_year))
-  if (form.value.description.trim()) {
+  fd.append('name', formData.value.name)
+  fd.append('brand_id', String(formData.value.brand_id))
+  if (formData.value.category_id) fd.append('category_id', String(formData.value.category_id))
+  fd.append('processor', formData.value.processor)
+  fd.append('battery_capacity', String(formData.value.battery_capacity))
+  if (formData.value.release_year) fd.append('release_year', String(formData.value.release_year))
+  if (formData.value.description.trim()) {
     fd.append('description[0][key]', 'Details')
-    fd.append('description[0][value]', form.value.description.trim())
+    fd.append('description[0][value]', formData.value.description.trim())
   }
-  imageFiles.value.forEach((file, i) => fd.append(`image[${i}]`, file))
+
+  let imageIndex = 0
+  if (isEdit.value) {
+    for (const url of existingImages.value) {
+      const filename = imageFilenameFromUrl(url)
+      if (filename) {
+        fd.append(`image[${imageIndex}]`, filename)
+        imageIndex++
+      }
+    }
+  }
+  imageFiles.value.forEach((file, i) => fd.append(`image[${imageIndex + i}]`, file))
   return fd
 }
 
@@ -114,10 +167,13 @@ async function save() {
   }
 }
 
-onMounted(async () => {
-  await loadOptions()
-  if (isEdit.value) await loadModel()
-})
+watch(
+  () => [route.name, route.params.id] as const,
+  () => {
+    bootstrap()
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -132,41 +188,41 @@ onMounted(async () => {
     </template>
 
     <div v-if="loading" class="page-loading">{{ t('common.loading') }}</div>
-    <form v-else class="form-page" @submit.prevent="save">
+    <form v-else :key="route.fullPath" class="form-page" @submit.prevent="save">
       <div class="form-grid two-col">
         <div class="form-group">
           <label>{{ t('phoneModels.name') }} *</label>
-          <input v-model="form.name" type="text" required />
+          <input v-model="formData.name" type="text" required />
         </div>
         <div class="form-group">
           <label>{{ t('phoneModels.brand') }} *</label>
-          <select v-model="form.brand_id" required>
+          <select v-model="formData.brand_id" required>
             <option value="">{{ t('phoneModels.selectBrand') }}</option>
             <option v-for="b in brands" :key="b.id" :value="b.id">{{ b.brand_name }}</option>
           </select>
         </div>
         <div class="form-group">
           <label>{{ t('phoneModels.category') }}</label>
-          <select v-model="form.category_id">
+          <select v-model="formData.category_id">
             <option value="">{{ t('phoneModels.selectCategory') }}</option>
             <option v-for="c in categories" :key="c.id" :value="c.id">{{ c.category_name }}</option>
           </select>
         </div>
         <div class="form-group">
           <label>{{ t('phoneModels.processor') }} *</label>
-          <input v-model="form.processor" type="text" required />
+          <input v-model="formData.processor" type="text" required />
         </div>
         <div class="form-group">
           <label>{{ t('phoneModels.battery') }} *</label>
-          <input v-model="form.battery_capacity" type="number" min="0" required />
+          <input v-model="formData.battery_capacity" type="number" min="0" required />
         </div>
         <div class="form-group">
           <label>{{ t('phoneModels.releaseYear') }}</label>
-          <input v-model="form.release_year" type="number" min="2000" max="2099" />
+          <input v-model="formData.release_year" type="number" min="2000" max="2099" />
         </div>
         <div class="form-group full">
           <label>{{ t('phoneModels.description') }}</label>
-          <textarea v-model="form.description" rows="4" />
+          <textarea v-model="formData.description" rows="4" />
         </div>
         <div class="form-group full">
           <label>{{ t('phoneModels.images') }}</label>

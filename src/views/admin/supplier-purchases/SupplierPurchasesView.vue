@@ -69,7 +69,7 @@ const columns = [
       @page-change="table.setPage"
     >
       <template #cell-invoice_number="{ item }">
-        <RouterLink :to="`/supplier-purchases/${(item as SupplierPurchase).id}`" class="link">
+        <RouterLink :to="{ name: 'supplier-purchases-show', params: { id: (item as SupplierPurchase).id } }" class="link">
           {{ (item as SupplierPurchase).invoice_number }}
         </RouterLink>
       </template>

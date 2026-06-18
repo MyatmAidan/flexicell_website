@@ -6,6 +6,7 @@ import { Icon } from '@iconify/vue'
 import { useAuthStore } from '@/stores/auth'
 import { profilePhotoUrl } from '@/utils/media'
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher.vue'
+import StorefrontProductsNavMenu from '@/components/storefront/StorefrontProductsNavMenu.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -78,7 +79,7 @@ function navClass(key: NavKey) {
 
         <nav class="sf-nav" :class="{ open: menuOpen }">
           <RouterLink to="/" :class="navClass('home')" @click="closeMenu">{{ t('storefront.nav.home') }}</RouterLink>
-          <RouterLink to="/products" :class="navClass('products')" @click="closeMenu">{{ t('storefront.nav.products') }}</RouterLink>
+          <StorefrontProductsNavMenu :active="isNavActive('products')" @navigate="closeMenu" />
           <RouterLink to="/blog" :class="navClass('blog')" @click="closeMenu">{{ t('storefront.nav.blog') }}</RouterLink>
           <RouterLink to="/warranty" :class="navClass('warranty')" @click="closeMenu">{{ t('storefront.nav.warranty') }}</RouterLink>
           <RouterLink to="/contact" :class="navClass('contact')" @click="closeMenu">{{ t('storefront.nav.contact') }}</RouterLink>

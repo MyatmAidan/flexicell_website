@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { storefrontApi } from '@/api/storefront'
-import { useReveal } from '@/composables/useReveal'
 import { useNotify } from '@/composables/useNotify'
 
-const { t } = useI18n()
+const { t, tm } = useI18n()
 const notify = useNotify()
-const { el, visible } = useReveal()
+
+const terms = computed(() => tm('storefront.warranty.terms') as string[])
 
 const imei = ref('')
 const loading = ref(false)
@@ -46,15 +46,22 @@ async function check() {
 
 <template>
   <section class="sf-section">
-    <div ref="el" class="sf-container">
-      <div class="sf-section-header sf-reveal" :class="{ 'sf-visible': visible }">
+    <div class="sf-container">
+      <div class="sf-section-header sf-reveal-up">
         <div>
           <h1 class="sf-section-title">{{ t('storefront.warranty.title') }}</h1>
           <p class="sf-section-sub">{{ t('storefront.warranty.subtitle') }}</p>
         </div>
       </div>
 
-      <div class="sf-form-card sf-reveal" :class="{ 'sf-visible': visible }">
+      <div class="sf-warranty-terms sf-reveal-up">
+        <h2 class="sf-warranty-terms-title">{{ t('storefront.warranty.termsTitle') }}</h2>
+        <ul class="sf-warranty-terms-list">
+          <li v-for="(term, index) in terms" :key="index">{{ term }}</li>
+        </ul>
+      </div>
+
+      <div class="sf-form-card sf-reveal-up">
         <form @submit.prevent="check">
           <div class="sf-field">
             <label for="imei">{{ t('storefront.warranty.imeiLabel') }}</label>

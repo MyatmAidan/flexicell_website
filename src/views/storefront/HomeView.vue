@@ -4,17 +4,16 @@ import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { storefrontApi } from '@/api/storefront'
-import { useReveal } from '@/composables/useReveal'
 import { useBlogScrollSection } from '@/composables/useScrollSection'
 import { storefrontImages } from '@/utils/storefrontAssets'
 import MarqueeStrip from '@/components/storefront/MarqueeStrip.vue'
+import StorefrontAmbientBubbles from '@/components/storefront/StorefrontAmbientBubbles.vue'
 import ProductScrollSection from '@/components/storefront/ProductScrollSection.vue'
 import BlogCard from '@/components/storefront/BlogCard.vue'
 import ScrollPaginationSentinel from '@/components/storefront/ScrollPaginationSentinel.vue'
 import type { StorefrontCategory } from '@/types/storefront'
 
 const { t } = useI18n()
-const { el: catEl, visible: catVisible } = useReveal()
 const categories = ref<StorefrontCategory[]>([])
 const categoriesLoading = ref(true)
 
@@ -36,9 +35,10 @@ onMounted(async () => {
   <div>
     <MarqueeStrip />
 
-    <section class="sf-tiktok-hero">
+    <section class="sf-tiktok-hero sf-hero-ambient">
+      <StorefrontAmbientBubbles />
       <div class="sf-container sf-tiktok-hero-grid">
-        <div>
+        <div class="sf-reveal-left">
           <span class="sf-tiktok-kicker">
             <Icon icon="solar:fire-bold" />
             {{ t('storefront.hero.badge') }}
@@ -51,9 +51,9 @@ onMounted(async () => {
           </div>
         </div>
 
-        <div class="sf-hero-photo-wrap">
+        <div class="sf-hero-photo-wrap sf-reveal-right">
           <div class="sf-hero-photo-frame">
-            <img :src="storefrontImages.hotdeal" :alt="t('storefront.photos.hotdealAlt')" />
+            <img :src="storefrontImages.ads" :alt="t('storefront.photos.hotdealAlt')" />
           </div>
           <div class="sf-hero-photo-stack">
             <img v-for="(src, i) in storefrontImages.showcase" :key="i" :src="src" :alt="t('storefront.photos.productAlt')" loading="lazy" />
@@ -62,9 +62,9 @@ onMounted(async () => {
       </div>
     </section>
 
-    <section ref="catEl" class="sf-section sf-section--alt">
+    <section class="sf-section sf-section--alt">
       <div class="sf-container">
-        <div class="sf-section-header sf-reveal" :class="{ 'sf-visible': catVisible || categories.length > 0 }">
+        <div class="sf-section-header sf-reveal-up">
           <div>
             <h2 class="sf-section-title">{{ t('storefront.categories.title') }}</h2>
             <p class="sf-section-sub">{{ t('storefront.categories.subtitle') }}</p>
@@ -81,8 +81,7 @@ onMounted(async () => {
             v-for="(cat, i) in categories"
             :key="cat.id"
             :to="{ path: '/products/search', query: { category_id: cat.id } }"
-            class="sf-cat-pill sf-reveal"
-            :class="{ 'sf-visible': catVisible || categories.length > 0 }"
+            class="sf-cat-pill sf-reveal-up"
             :style="{ transitionDelay: `${Math.min(i * 55, 330)}ms` }"
           >
             <span class="sf-cat-pill-icon">
@@ -116,14 +115,14 @@ onMounted(async () => {
 
     <section class="sf-section sf-section--alt">
       <div class="sf-container">
-        <div class="sf-section-header">
+        <div class="sf-section-header sf-reveal-up">
           <div>
             <h2 class="sf-section-title">{{ t('storefront.photos.shopTitle') }}</h2>
             <p class="sf-section-sub">{{ t('storefront.photos.shopSub') }}</p>
           </div>
         </div>
         <div class="fc-shop-gallery">
-          <div v-for="(src, i) in storefrontImages.shops" :key="i" class="fc-shop-photo sf-reveal sf-visible">
+          <div v-for="(src, i) in storefrontImages.shops" :key="i" class="fc-shop-photo sf-reveal-up" :style="{ transitionDelay: `${Math.min(i * 90, 360)}ms` }">
             <img :src="src" :alt="t('storefront.photos.shopAlt')" loading="lazy" />
           </div>
         </div>
@@ -132,7 +131,7 @@ onMounted(async () => {
 
     <section class="sf-section">
       <div class="sf-container">
-        <div class="sf-section-header">
+        <div class="sf-section-header sf-reveal-up">
           <div>
             <h2 class="sf-section-title">{{ t('storefront.sections.latestBlog') }}</h2>
             <p class="sf-section-sub">{{ t('storefront.sections.latestBlogSub') }}</p>
@@ -150,7 +149,6 @@ onMounted(async () => {
             :key="blog.id"
             :blog="blog"
             :index="i"
-            :animate="blogItems.length > 0"
             variant="light"
           />
         </div>

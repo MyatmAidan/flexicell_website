@@ -47,8 +47,8 @@ const columns = [
       @page-change="table.setPage"
     >
       <template #cell-id="{ item }">
-        <RouterLink :to="`/installments/${(item as Installment).id}`" class="link">
-          #{{ (item as Installment).id }}
+        <RouterLink :to="{ name: 'installments-show', params: { id: (item as Installment).id } }" class="link">
+          {{ (item as Installment).id }}
         </RouterLink>
       </template>
       <template #cell-customer="{ item }">

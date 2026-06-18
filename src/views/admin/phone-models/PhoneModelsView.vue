@@ -22,6 +22,7 @@ const table = useDataTable<PhoneModel>((p) => phoneModelsApi.list(p), 'created_a
 const importing = ref(false)
 
 const columns = [
+  { key: 'image_urls', label: t('phoneModels.images') },
   { key: 'model_name', label: t('phoneModels.name'), sortable: true },
   { key: 'brand_name', label: t('phoneModels.brand') },
   { key: 'category_name', label: t('phoneModels.category') },
@@ -115,8 +116,17 @@ async function remove(model: PhoneModel) {
       @sort="table.setSort"
       @page-change="table.setPage"
     >
+      <template #cell-image_urls="{ item }">
+        <img
+          v-if="(item as PhoneModel).image_urls?.[0]"
+          :src="(item as PhoneModel).image_urls![0]"
+          class="table-thumb"
+          alt=""
+        />
+        <span v-else>—</span>
+      </template>
       <template #cell-model_name="{ item }">
-        <RouterLink :to="`/phone-models/${(item as PhoneModel).id}`" class="link">
+        <RouterLink :to="{ name: 'phone-models-show', params: { id: (item as PhoneModel).id } }" class="link">
           {{ (item as PhoneModel).model_name }}
         </RouterLink>
       </template>

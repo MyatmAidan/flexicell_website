@@ -138,7 +138,7 @@ function comboOptionLabel(combo: {
       </div>
       <p v-if="stock">
         <strong>{{ stock.count }}</strong> {{ t('pos.available') }}
-        · {{ formatCurrency(resolvedPrice) }}
+        <template v-if="resolvedPrice > 0"> · {{ formatCurrency(resolvedPrice) }}</template>
       </p>
     </div>
 

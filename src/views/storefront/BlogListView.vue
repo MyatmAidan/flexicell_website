@@ -2,12 +2,10 @@
 import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBlogScrollSection } from '@/composables/useScrollSection'
-import { useReveal } from '@/composables/useReveal'
 import BlogCard from '@/components/storefront/BlogCard.vue'
 import ScrollPaginationSentinel from '@/components/storefront/ScrollPaginationSentinel.vue'
 
 const { t } = useI18n()
-const { el, visible } = useReveal()
 
 const blogSection = useBlogScrollSection(9)
 const { items: blogs, loading, meta, load } = blogSection
@@ -19,8 +17,8 @@ onMounted(() => load(true))
 
 <template>
   <section class="sf-section">
-    <div ref="el" class="sf-container">
-      <div class="sf-section-header sf-reveal" :class="{ 'sf-visible': visible }">
+    <div class="sf-container">
+      <div class="sf-section-header sf-reveal-up">
         <div>
           <h1 class="sf-section-title">{{ t('storefront.blog.title') }}</h1>
           <p class="sf-section-sub">{{ t('storefront.blog.subtitle') }}</p>
@@ -37,7 +35,6 @@ onMounted(() => load(true))
           :key="blog.id"
           :blog="blog"
           :index="i"
-          :animate="visible"
         />
       </div>
 

@@ -140,6 +140,12 @@ const router = createRouter({
           meta: { permission: 'products.update' },
         },
         {
+          path: 'products/:id',
+          name: 'products-show',
+          component: () => import('@/views/admin/products/ProductShowView.vue'),
+          meta: { permission: 'products.view' },
+        },
+        {
           path: 'products',
           name: 'products',
           component: () => import('@/views/admin/products/ProductsView.vue'),

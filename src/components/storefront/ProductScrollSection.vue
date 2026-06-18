@@ -2,7 +2,6 @@
 import { computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useProductScrollSection } from '@/composables/useScrollSection'
-import { useReveal } from '@/composables/useReveal'
 import ScrollPaginationSentinel from './ScrollPaginationSentinel.vue'
 import ProductCard from './ProductCard.vue'
 
@@ -18,7 +17,6 @@ const props = withDefaults(
 )
 
 const { t } = useI18n()
-const { el, visible } = useReveal()
 const { items, loading, meta, load } = useProductScrollSection(props.type)
 
 const hasMore = computed(() => Boolean(meta.value?.has_more))
@@ -27,9 +25,9 @@ onMounted(() => load(true))
 </script>
 
 <template>
-  <section ref="el" class="sf-section" :class="{ 'sf-section--alt': alt }">
+  <section class="sf-section" :class="{ 'sf-section--alt': alt }">
     <div class="sf-container">
-      <div class="sf-section-header sf-reveal" :class="{ 'sf-visible': visible || items.length > 0 }">
+      <div class="sf-section-header sf-reveal-up">
         <div>
           <h2 class="sf-section-title">{{ t(titleKey) }}</h2>
           <p v-if="subtitleKey" class="sf-section-sub">{{ t(subtitleKey) }}</p>
@@ -50,7 +48,6 @@ onMounted(() => load(true))
           :key="product.id"
           :product="product"
           :index="i"
-          :animate="items.length > 0"
           :variant="variant"
         />
       </div>

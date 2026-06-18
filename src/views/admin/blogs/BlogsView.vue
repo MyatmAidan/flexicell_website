@@ -70,9 +70,9 @@ async function remove(blog: Blog) {
       @page-change="table.setPage"
     >
       <template #cell-title="{ item }">
-        <router-link :to="`/blogs/${(item as Blog).id}`" class="link">
+        <RouterLink :to="{ name: 'blogs-show', params: { id: (item as Blog).id } }" class="link">
           {{ (item as Blog).title }}
-        </router-link>
+        </RouterLink>
       </template>
       <template #cell-created_at="{ value }">{{ formatDate(value as string) }}</template>
       <template #actions="{ item }">

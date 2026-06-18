@@ -3,14 +3,12 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { storefrontApi } from '@/api/storefront'
-import { useReveal } from '@/composables/useReveal'
 import { formatCurrency } from '@/utils/format'
 import type { ProductDetail } from '@/types/storefront'
 
 const { t } = useI18n()
 const route = useRoute()
 const id = computed(() => Number(route.params.id))
-const { el, visible } = useReveal({ threshold: 0.08 })
 
 const loading = ref(true)
 const product = ref<ProductDetail | null>(null)
@@ -35,7 +33,7 @@ const specs = computed(() => {
 
 <template>
   <section class="sf-section">
-    <div ref="el" class="sf-container">
+    <div class="sf-container">
       <div v-if="loading" class="sf-detail-grid">
         <div class="sf-skeleton" style="aspect-ratio: 1" />
         <div class="sf-skeleton" style="height: 320px" />
@@ -46,8 +44,8 @@ const specs = computed(() => {
           ← {{ t('common.back') }}
         </RouterLink>
 
-        <div class="sf-detail-grid sf-reveal" :class="{ 'sf-visible': visible }">
-          <div>
+        <div class="sf-detail-grid">
+          <div class="sf-reveal-left">
             <div class="sf-gallery-main">
               <img
                 v-if="product.images[activeImage]"
@@ -68,7 +66,7 @@ const specs = computed(() => {
             </div>
           </div>
 
-          <div>
+          <div class="sf-reveal-right">
             <p style="color: var(--sf-muted); margin: 0 0 0.25rem; font-size: 0.85rem; text-transform: uppercase">
               {{ product.brand_name }} · {{ product.category_name }}
             </p>

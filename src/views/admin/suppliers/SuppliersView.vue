@@ -110,7 +110,7 @@ async function remove(supplier: Supplier) {
       @page-change="table.setPage"
     >
       <template #cell-company_name="{ item }">
-        <RouterLink :to="`/suppliers/${(item as Supplier).id}`" class="link">
+        <RouterLink :to="{ name: 'supplier-show', params: { id: (item as Supplier).id } }" class="link">
           {{ (item as Supplier).company_name }}
         </RouterLink>
       </template>

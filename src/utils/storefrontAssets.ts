@@ -5,9 +5,10 @@ export function imgPath(filename: string): string {
 
 export const storefrontImages = {
   logo: '/img/flexicell_logo.png',
-  hotdeal: imgPath('hotdeal.png'),
-  bannerPhones: imgPath('IMAGE 2026-05-05 11:21:39.jpg'),
-  bannerDelivery: imgPath('IMAGE 2026-05-05 11:21:43.jpg'),
+  ads: imgPath('flexicell_ads.png'),
+  bannerPhones: imgPath('flexicell_poster.jpg'),
+  bannerDelivery: imgPath('flexicell_delivery.jpg'),
+  contact:imgPath('flexicell_contact.png'),
   shops: [imgPath('shop01.png'), imgPath('shop02.png'), imgPath('shop03.png')],
-  showcase: [imgPath('product01.png'), imgPath('product02.png'), imgPath('product03.png')],
+  showcase: [imgPath('MacBook_Pro_m5.png'), imgPath('17PMOrange.png'), imgPath('ipad_nobg.png')],
 } as const

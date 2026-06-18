@@ -7,6 +7,7 @@ import { storefrontApi } from '@/api/storefront'
 import { useNotify } from '@/composables/useNotify'
 import { storefrontImages } from '@/utils/storefrontAssets'
 import StorefrontBreadcrumb from '@/components/storefront/StorefrontBreadcrumb.vue'
+import StorefrontAmbientBubbles from '@/components/storefront/StorefrontAmbientBubbles.vue'
 
 const { t } = useI18n()
 const notify = useNotify()
@@ -43,58 +44,51 @@ async function submit() {
       </div>
     </div>
 
-    <section class="fc-contact-hero">
+    <section class="fc-contact-hero fc-hero-ambient">
+      <StorefrontAmbientBubbles />
       <div class="sf-container">
         <div class="fc-contact-hero-inner">
-          <div class="fc-contact-logo-wrap">
+          <div class="fc-contact-logo-wrap sf-reveal-left">
             <img :src="storefrontImages.logo" alt="Flexicell Mobile" />
           </div>
-          <div class="fc-contact-hero-copy">
+          <div class="fc-contact-hero-copy sf-reveal-up">
             <p class="fc-brand-kicker">{{ t('storefront.contact.kicker') }}</p>
             <h1>{{ t('storefront.contact.title') }}</h1>
             <p class="fc-sublead">{{ t('storefront.contact.subtitle') }}</p>
           </div>
-          <div class="fc-contact-hero-side">
-            <img :src="storefrontImages.shops[0]" :alt="t('storefront.photos.shopAlt')" />
+          <div class="fc-contact-hero-side sf-reveal-right">
+            <img :src="storefrontImages.contact" :alt="t('storefront.photos.shopAlt')" />
           </div>
         </div>
       </div>
     </section>
 
-    <section class="sf-section" style="padding-top: 0">
+    <section class="sf-section" style="padding-top: 20px">
       <div class="sf-container">
         <div class="fc-contact-cards">
-          <div class="fc-contact-card">
+          <div class="fc-contact-card sf-reveal-up" style="transition-delay: 0ms">
             <Icon icon="solar:phone-bold" class="fc-c-icon" />
             <h3>{{ t('storefront.contact.phone') }}</h3>
             <p><a href="tel:09978844466">09978844466</a></p>
           </div>
-          <div class="fc-contact-card">
+          <div class="fc-contact-card sf-reveal-up" style="transition-delay: 80ms">
             <Icon icon="solar:letter-bold" class="fc-c-icon" />
             <h3>{{ t('storefront.contact.email') }}</h3>
             <p><a href="mailto:flexicell.main.mdy@gmail.com">flexicell.main.mdy@gmail.com</a></p>
           </div>
-          <div class="fc-contact-card">
+          <div class="fc-contact-card sf-reveal-up" style="transition-delay: 160ms">
             <Icon icon="solar:map-point-bold" class="fc-c-icon" />
             <h3>{{ t('storefront.contact.location') }}</h3>
             <p>{{ t('storefront.contact.locationValue') }}</p>
           </div>
-          <div class="fc-contact-card">
+          <div class="fc-contact-card sf-reveal-up" style="transition-delay: 240ms">
             <Icon icon="solar:clock-circle-bold" class="fc-c-icon" />
             <h3>{{ t('storefront.contact.hours') }}</h3>
             <p>{{ t('storefront.contact.hoursValue') }}</p>
           </div>
         </div>
 
-        <h2 class="sf-section-title" style="margin-top: 0">{{ t('storefront.photos.shopTitle') }}</h2>
-        <p class="sf-section-sub" style="margin-bottom: 1.25rem">{{ t('storefront.photos.shopSub') }}</p>
-        <div class="fc-shop-gallery">
-          <div v-for="(src, i) in storefrontImages.shops" :key="i" class="fc-shop-photo">
-            <img :src="src" :alt="t('storefront.photos.shopAlt')" loading="lazy" />
-          </div>
-        </div>
-
-        <div class="fc-map-section">
+        <div class="fc-map-section sf-reveal-up">
           <div class="fc-map-head">
             <h2>
               <Icon icon="solar:map-bold" style="margin-right: 8px; color: var(--sf-red)" />
@@ -118,7 +112,7 @@ async function submit() {
         </div>
 
         <div class="fc-contact-layout">
-          <div class="fc-form-shell">
+          <div class="fc-form-shell sf-reveal-left">
             <div class="fc-form-accent" />
             <div class="fc-form-inner">
               <div class="fc-form-title-row">
@@ -165,7 +159,7 @@ async function submit() {
             </div>
           </div>
 
-          <aside class="fc-quick-panel">
+          <aside class="fc-quick-panel sf-reveal-right">
             <h2>{{ t('storefront.contact.quickLinks') }}</h2>
             <p class="fc-sub">{{ t('storefront.contact.quickLinksSub') }}</p>
             <div class="fc-quick-links">

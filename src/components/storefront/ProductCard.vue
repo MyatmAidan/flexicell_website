@@ -17,8 +17,8 @@ const { t } = useI18n()
 <template>
   <RouterLink
     :to="`/products/${product.id}`"
-    class="sf-product-card sf-reveal"
-    :class="{ 'sf-visible': animate !== false }"
+    class="sf-product-card sf-reveal-up"
+    :class="{ 'sf-visible': animate === false }"
     :style="index != null ? { transitionDelay: `${Math.min(index * 55, 350)}ms` } : undefined"
   >
     <div class="sf-product-img-wrap">

@@ -11,7 +11,7 @@ const year = new Date().getFullYear()
     <div class="sf-container">
       <div class="sf-footer-grid">
         <div>
-          <img src="/img/flexicell_logo.png" alt="Flexicell" style="height: 36px; filter: brightness(0) invert(1); margin-bottom: 0.75rem" />
+          <img src="/img/flexicell_logo1.png" alt="Flexicell" style="height: 36px; filter: brightness(0) invert(1); margin-bottom: 0.75rem" />
           <p style="font-size: 0.88rem; line-height: 1.6; margin: 0">{{ t('storefront.footer.tagline') }}</p>
         </div>
         <div>

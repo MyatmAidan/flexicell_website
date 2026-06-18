@@ -5,7 +5,6 @@ export interface PosProduct {
   label: string
   brand: string
   product_type: string
-  selling_price: number
   stock_quantity: number
   available_devices: number
   image: string | null

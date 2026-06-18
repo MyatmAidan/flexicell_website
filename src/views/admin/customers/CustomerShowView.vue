@@ -12,8 +12,8 @@ import { formatCurrency, formatDate } from '@/utils/format'
 interface CustomerOrder {
   id: number
   order_date: string | null
-  status: string | null
-  total_amount: number | null
+  order_status: string | null
+  grand_total: number | null
   user?: { id: number; name: string } | null
 }
 
@@ -106,18 +106,29 @@ onMounted(load)
                 <th>{{ t('customers.orderAmount') }}</th>
                 <th>{{ t('common.status') }}</th>
                 <th>{{ t('customers.soldBy') }}</th>
+                <th>{{ t('common.actions') }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="order in customer.orders || []" :key="order.id">
                 <td>#{{ order.id }}</td>
                 <td>{{ formatDate(order.order_date) }}</td>
-                <td>{{ formatCurrency(order.total_amount) }}</td>
-                <td><span class="badge">{{ order.status || '—' }}</span></td>
+                <td>{{ formatCurrency(order.grand_total) }}</td>
+                <td><span class="badge">{{ order.order_status || '—' }}</span></td>
                 <td>{{ order.user?.name || '—' }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    :title="t('orders.receipt')"
+                    @click="router.push({ name: 'orders-receipt', params: { id: order.id } })"
+                  >
+                    <Icon icon="solar:bill-list-linear" />
+                  </button>
+                </td>
               </tr>
               <tr v-if="!(customer.orders || []).length">
-                <td colspan="5" class="empty-cell">{{ t('common.noData') }}</td>
+                <td colspan="6" class="empty-cell">{{ t('common.noData') }}</td>
               </tr>
             </tbody>
           </table>

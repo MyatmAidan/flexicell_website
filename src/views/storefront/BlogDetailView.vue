@@ -3,13 +3,11 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { storefrontApi } from '@/api/storefront'
-import { useReveal } from '@/composables/useReveal'
 import type { BlogDetail } from '@/types/storefront'
 
 const { t } = useI18n()
 const route = useRoute()
 const id = computed(() => Number(route.params.id))
-const { el, visible } = useReveal({ threshold: 0.05 })
 
 const loading = ref(true)
 const blog = ref<BlogDetail | null>(null)
@@ -30,7 +28,7 @@ const sections = computed(() =>
 
 <template>
   <section class="sf-section">
-    <div ref="el" class="sf-container" style="max-width: 800px">
+    <div class="sf-container" style="max-width: 800px">
       <div v-if="loading" class="sf-skeleton" style="height: 400px" />
 
       <template v-else-if="blog">
@@ -38,7 +36,7 @@ const sections = computed(() =>
           ← {{ t('storefront.blog.back') }}
         </RouterLink>
 
-        <article class="sf-reveal" :class="{ 'sf-visible': visible }">
+        <article class="sf-reveal-up">
           <div v-if="blog.thumbnail" style="border-radius: var(--sf-radius); overflow: hidden; margin-bottom: 1.5rem">
             <img :src="blog.thumbnail" :alt="blog.title" style="width: 100%; max-height: 360px; object-fit: cover" />
           </div>
@@ -48,8 +46,7 @@ const sections = computed(() =>
           <section
             v-for="(section, i) in sections"
             :key="section.id"
-            class="sf-reveal"
-            :class="{ 'sf-visible': visible }"
+            class="sf-reveal-up"
             :style="{ transitionDelay: `${Math.min(i * 100, 500)}ms`, marginBottom: '2rem' }"
           >
             <h2 v-if="section.heading" style="font-size: 1.2rem; margin: 0 0 0.75rem">{{ section.heading }}</h2>

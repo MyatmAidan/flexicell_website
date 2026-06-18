@@ -12,7 +12,7 @@ import { useDataTable } from '@/composables/useDataTable'
 import { usePermissions } from '@/composables/usePermissions'
 import { useNotify } from '@/composables/useNotify'
 import { getApiErrorMessage } from '@/utils/apiError'
-import { formatCurrency, formatDate } from '@/utils/format'
+import { formatDate } from '@/utils/format'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -27,7 +27,6 @@ const columns = [
   { key: 'product_type', label: t('products.type') },
   { key: 'stock_quantity', label: t('products.stock'), sortable: true },
   { key: 'available_devices_count', label: t('products.availableDevices') },
-  { key: 'selling_price', label: t('products.sellingPrice'), sortable: true },
   { key: 'created_at', label: t('common.createdAt'), sortable: true },
 ]
 
@@ -118,9 +117,21 @@ async function remove(product: Product) {
       <template #cell-product_type="{ value }">
         <span class="badge">{{ value }}</span>
       </template>
-      <template #cell-selling_price="{ value }">{{ formatCurrency(value as number) }}</template>
+      <template #cell-model_name="{ item }">
+        <RouterLink :to="{ name: 'products-show', params: { id: (item as Product).id } }" class="link">
+          {{ (item as Product).model_name ?? `#${(item as Product).id}` }}
+        </RouterLink>
+      </template>
       <template #cell-created_at="{ value }">{{ formatDate(value as string) }}</template>
       <template #actions="{ item }">
+        <button
+          type="button"
+          class="btn-icon"
+          :title="t('common.view')"
+          @click="router.push(`/admin/products/${(item as Product).id}`)"
+        >
+          <Icon icon="solar:eye-linear" />
+        </button>
         <button
           v-if="hasAny('products.update')"
           type="button"

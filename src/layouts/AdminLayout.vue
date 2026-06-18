@@ -21,7 +21,7 @@ function closeSidebar() {
     <div class="admin-main">
       <AdminHeader @toggle-sidebar="toggleSidebar" />
       <main class="admin-content">
-        <RouterView />
+        <RouterView :key="$route.fullPath" />
       </main>
     </div>
   </div>

@@ -3,7 +3,6 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { extractScrollMeta, storefrontApi } from '@/api/storefront'
-import { useReveal } from '@/composables/useReveal'
 import ProductCard from '@/components/storefront/ProductCard.vue'
 import ScrollPaginationSentinel from '@/components/storefront/ScrollPaginationSentinel.vue'
 import type { ScrollMeta, StorefrontBrand, StorefrontCategory, StorefrontProduct } from '@/types/storefront'
@@ -11,7 +10,6 @@ import type { ScrollMeta, StorefrontBrand, StorefrontCategory, StorefrontProduct
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const { el, visible } = useReveal()
 
 const loading = ref(false)
 const products = ref<StorefrontProduct[]>([])
@@ -83,15 +81,15 @@ watch(
 
 <template>
   <section class="sf-section">
-    <div ref="el" class="sf-container">
-      <div class="sf-section-header sf-reveal" :class="{ 'sf-visible': visible }">
+    <div class="sf-container">
+      <div class="sf-section-header sf-reveal-up">
         <div>
           <h1 class="sf-section-title">{{ t('storefront.search.title') }}</h1>
           <p class="sf-section-sub">{{ t('storefront.search.subtitle') }}</p>
         </div>
       </div>
 
-      <form class="sf-filters sf-reveal" :class="{ 'sf-visible': visible }" @submit.prevent="applyFilters">
+      <form class="sf-filters sf-reveal-up" style="transition-delay: 80ms" @submit.prevent="applyFilters">
         <input v-model="query" type="search" :placeholder="t('storefront.search.placeholder')" />
         <select v-model="categoryId">
           <option value="">{{ t('storefront.search.allCategories') }}</option>
@@ -108,7 +106,7 @@ watch(
         <div v-for="n in 8" :key="n" class="sf-skeleton sf-skeleton-card" />
       </div>
 
-      <div v-else-if="!products.length" class="sf-reveal sf-visible" style="text-align: center; padding: 3rem 0; color: var(--sf-muted)">
+      <div v-else-if="!products.length" class="sf-reveal-up sf-visible" style="text-align: center; padding: 3rem 0; color: var(--sf-muted)">
         {{ t('storefront.search.noResults') }}
       </div>
 
@@ -118,7 +116,6 @@ watch(
           :key="product.id"
           :product="product"
           :index="i"
-          :animate="visible"
         />
       </div>
 

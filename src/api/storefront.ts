@@ -5,6 +5,7 @@ import type {
   ProductSearchResult,
   ScrollMeta,
   StorefrontBlog,
+  StorefrontBrand,
   StorefrontCategory,
   StorefrontProduct,
 } from '@/types/storefront'
@@ -14,6 +15,9 @@ const BASE = '/public'
 
 export const storefrontApi = {
   categories: () => publicGet<StorefrontCategory[]>(`${BASE}/categories`),
+
+  brands: (categoryId?: number) =>
+    publicGet<StorefrontBrand[]>(`${BASE}/brands`, categoryId ? { category_id: categoryId } : undefined),
 
   scrollProducts: (type: 'new' | 'popular' | 'bestseller', page = 1) =>
     publicGet<StorefrontProduct[]>(`${BASE}/products/scroll`, { type, page }),

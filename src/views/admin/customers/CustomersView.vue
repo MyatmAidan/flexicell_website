@@ -101,7 +101,7 @@ async function remove(c: Customer) {
       @page-change="table.setPage"
     >
       <template #cell-name="{ item }">
-        <RouterLink :to="`/customers/${(item as Customer).id}`" class="link">{{ (item as Customer).name }}</RouterLink>
+        <RouterLink :to="{ name: 'customer-show', params: { id: (item as Customer).id } }" class="link">{{ (item as Customer).name }}</RouterLink>
       </template>
       <template #cell-account_type="{ value }">
         <span class="badge">{{ value }}</span>

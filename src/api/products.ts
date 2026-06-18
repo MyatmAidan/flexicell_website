@@ -11,7 +11,6 @@ export interface Product {
   image: unknown
   image_urls: string[]
   available_devices_count?: number
-  selling_price: number
   stock_quantity: number
   created_at: string
   updated_at: string

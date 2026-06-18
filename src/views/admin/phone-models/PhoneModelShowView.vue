@@ -58,6 +58,19 @@ onMounted(load)
 
     <div v-if="loading" class="page-loading">{{ t('common.loading') }}</div>
     <div v-else-if="model" class="detail-grid">
+      <div v-if="model.image_urls?.length" class="detail-section">
+        <h3>{{ t('phoneModels.images') }}</h3>
+        <div class="image-preview-row">
+          <img
+            v-for="(url, i) in model.image_urls"
+            :key="i"
+            :src="url"
+            class="preview-img detail-photo"
+            :alt="model.model_name"
+          />
+        </div>
+      </div>
+
       <dl class="detail-list">
         <dt>{{ t('phoneModels.brand') }}</dt>
         <dd>{{ model.brand_name ?? '—' }}</dd>
@@ -84,12 +97,13 @@ onMounted(load)
         </ul>
       </div>
 
-      <div v-if="model.image_urls?.length" class="detail-section">
-        <h3>{{ t('phoneModels.images') }}</h3>
-        <div class="image-preview-row">
-          <img v-for="(url, i) in model.image_urls" :key="i" :src="url" class="preview-img" alt="" />
-        </div>
-      </div>
     </div>
   </PageCard>
 </template>
+
+<style scoped>
+.detail-photo {
+  width: 120px;
+  height: 120px;
+}
+</style>

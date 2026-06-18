@@ -433,6 +433,9 @@
     "images": "Images",
     "create": "Create Product",
     "edit": "Edit Product",
+    "detail": "Product Detail",
+    "devicesList": "Devices",
+    "devicesEmpty": "No devices found for this product.",
     "created": "Product created successfully",
     "updated": "Product updated successfully",
     "deleted": "Product deleted successfully",
@@ -459,6 +462,7 @@
     "warranty": "Warranty",
     "image": "Image",
     "edit": "Edit Device",
+    "detail": "Device Detail",
     "updated": "Device updated successfully",
     "deleted": "Device deleted successfully",
     "deleteConfirm": "Delete device with IMEI \"{imei}\"?",
@@ -671,7 +675,9 @@
       "about": "About",
       "login": "Login",
       "register": "Register",
-      "admin": "Admin Login"
+      "admin": "Admin Login",
+      "allProducts": "All products",
+      "noBrands": "No brands in this category"
     },
     "footer": {
       "tagline": "Your trusted mobile shop in Mandalay — quality phones, fair prices, and reliable warranty service.",
@@ -727,7 +733,7 @@
       "hotdealAlt": "Flexicell special offers",
       "productAlt": "Featured smartphone",
       "shopTitle": "Visit our shop",
-      "shopSub": "Flexicell Mobile in Mandalay — real photos from our store",
+      "shopSub": "Flexicell Mobile in Mandalay",
       "shopAlt": "Flexicell shop photo"
     },
     "productsPage": {
@@ -768,7 +774,18 @@
       "warrantyInfo": "Warranty Information",
       "start": "Start Date",
       "end": "End Date",
-      "noWarranty": "No warranty record found for this device."
+      "noWarranty": "No warranty record found for this device.",
+      "termsTitle": "Warranty terms & conditions",
+      "terms": [
+        "Phones and tablets — including devices more than one day past the two-year warranty — are not accepted for return for software/hardware errors caused by software updates before the warranty period ends.",
+        "After one day past the two-year warranty, we no longer accept responsibility for errors or factory errors caused by the user within one month.",
+        "Only products sold within one year are covered. Accidental damage and original component failure are not covered under warranty.",
+        "For second-hand repaired devices (50%): please confirm whether the unit is a post-sale return. For 30% units: please confirm whether it is a post-sale exchange item.",
+        "For second-hand warranted devices (50%): post-sale exchange applies. For 30% units: post-sale exchange applies — please note before purchase.",
+        "For Brand New/Packing items resold as second-hand within the second period (10%): post-sale exchange applies — please note before purchase.",
+        "All iPhone models are covered for factory errors only for one month when sent to the shop. All carry a one-month warranty; service fees apply for non-factory errors.",
+        "For used devices: if the box and seal are missing or the original condition is not shown, we do not accept responsibility for the original condition or errors."
+      ]
     },
     "contact": {
       "breadcrumb": "Contact Us",

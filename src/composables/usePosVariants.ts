@@ -101,7 +101,7 @@ export function usePosVariants(cart: Ref<CartLine[]>) {
     selectedStorage.value = null
     selectedColor.value = null
     variantStock.value = null
-    variantResolvedPrice.value = product.selling_price
+    variantResolvedPrice.value = 0
     showVariantModal.value = true
     variantLoading.value = true
 
@@ -147,7 +147,7 @@ export function usePosVariants(cart: Ref<CartLine[]>) {
         }
       }
       const min = variantStock.value?.min_price
-      variantResolvedPrice.value = min ?? combo.min_price ?? product.selling_price
+      variantResolvedPrice.value = min ?? combo.min_price ?? 0
       variantQty.value = Math.min(variantQty.value, variantStock.value?.count ?? combo.stock)
       return
     }
@@ -160,7 +160,7 @@ export function usePosVariants(cart: Ref<CartLine[]>) {
     try {
       const res = await directSaleApi.variantStock(params)
       variantStock.value = res.data as { count: number; min_price: number | null; max_price: number | null }
-      variantResolvedPrice.value = variantStock.value?.min_price ?? product.selling_price
+      variantResolvedPrice.value = variantStock.value?.min_price ?? 0
     } catch {
       variantStock.value = { count: 0, min_price: null, max_price: null }
     }

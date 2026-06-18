@@ -4,11 +4,9 @@ import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { storefrontApi } from '@/api/storefront'
-import { useReveal } from '@/composables/useReveal'
 import type { StorefrontCategory } from '@/types/storefront'
 
 const { t } = useI18n()
-const { el, visible } = useReveal()
 const categories = ref<StorefrontCategory[]>([])
 const loading = ref(true)
 
@@ -24,8 +22,8 @@ onMounted(async () => {
 
 <template>
   <section class="sf-section">
-    <div ref="el" class="sf-container">
-      <div class="sf-section-header sf-reveal" :class="{ 'sf-visible': visible || categories.length > 0 }">
+    <div class="sf-container">
+      <div class="sf-section-header sf-reveal-up">
         <div>
           <h1 class="sf-section-title">{{ t('storefront.productsPage.title') }}</h1>
           <p class="sf-section-sub">{{ t('storefront.productsPage.subtitle') }}</p>
@@ -42,8 +40,7 @@ onMounted(async () => {
           v-for="(cat, i) in categories"
           :key="cat.id"
           :to="{ path: '/products/search', query: { category_id: cat.id } }"
-          class="sf-category-card sf-reveal"
-          :class="{ 'sf-visible': visible || categories.length > 0 }"
+          class="sf-category-card sf-reveal-up"
           :style="{ transitionDelay: `${Math.min(i * 55, 400)}ms` }"
         >
           <div class="sf-category-icon">

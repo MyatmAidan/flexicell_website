@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import { storefrontImages } from '@/utils/storefrontAssets'
 import StorefrontBreadcrumb from '@/components/storefront/StorefrontBreadcrumb.vue'
+import StorefrontAmbientBubbles from '@/components/storefront/StorefrontAmbientBubbles.vue'
 
 const { t } = useI18n()
 
@@ -27,10 +28,11 @@ const featureCards = [
       </div>
     </div>
 
-    <section class="fc-deco-wrap fc-hero-split">
+    <section class="fc-deco-wrap fc-hero-split fc-hero-ambient">
+      <StorefrontAmbientBubbles />
       <div class="sf-container">
         <div class="fc-hero-row">
-          <div class="fc-hero-copy">
+          <div class="fc-hero-copy sf-reveal-left">
             <span class="fc-brand-line">{{ t('storefront.about.kicker') }}</span>
             <h1>{{ t('storefront.about.heroTitle') }}</h1>
             <p>{{ t('storefront.about.heroLead') }}</p>
@@ -38,7 +40,7 @@ const featureCards = [
               <span v-for="pill in pills" :key="pill" class="fc-pill">{{ t(`storefront.about.pills.${pill}`) }}</span>
             </div>
           </div>
-          <div class="fc-hero-banner">
+          <div class="fc-hero-banner sf-reveal-right">
             <div class="fc-banner-frame">
               <img :src="storefrontImages.bannerPhones" :alt="t('storefront.about.bannerPhonesAlt')" />
             </div>
@@ -49,10 +51,15 @@ const featureCards = [
 
     <section class="sf-section sf-section--alt" style="padding-top: 0">
       <div class="sf-container">
-        <h2 class="sf-section-title">{{ t('storefront.photos.shopTitle') }}</h2>
-        <p class="sf-section-sub" style="margin-bottom: 1.25rem">{{ t('storefront.photos.shopSub') }}</p>
+        <h2 class="sf-section-title sf-reveal-up">{{ t('storefront.photos.shopTitle') }}</h2>
+        <p class="sf-section-sub sf-reveal-up" style="margin-bottom: 1.25rem">{{ t('storefront.photos.shopSub') }}</p>
         <div class="fc-shop-gallery">
-          <div v-for="(src, i) in storefrontImages.shops" :key="i" class="fc-shop-photo">
+          <div
+            v-for="(src, i) in storefrontImages.shops"
+            :key="i"
+            class="fc-shop-photo sf-reveal-up"
+            :style="{ transitionDelay: `${Math.min(i * 90, 360)}ms` }"
+          >
             <img :src="src" :alt="t('storefront.photos.shopAlt')" loading="lazy" />
           </div>
         </div>
@@ -61,7 +68,7 @@ const featureCards = [
 
     <section class="sf-section" style="padding-top: 0">
       <div class="sf-container">
-        <div class="fc-delivery-band">
+        <div class="fc-delivery-band sf-reveal-up">
           <div class="fc-delivery-img">
             <img :src="storefrontImages.bannerDelivery" :alt="t('storefront.about.bannerDeliveryAlt')" />
           </div>
@@ -77,23 +84,28 @@ const featureCards = [
           </div>
         </div>
 
-        <h2 class="fc-section-title">{{ t('storefront.about.whatWeDo') }}</h2>
+        <h2 class="fc-section-title sf-reveal-up">{{ t('storefront.about.whatWeDo') }}</h2>
         <div class="fc-about-cards">
-          <div v-for="card in featureCards" :key="card.key" class="fc-card-about">
+          <div
+            v-for="(card, i) in featureCards"
+            :key="card.key"
+            class="fc-card-about sf-reveal-up"
+            :style="{ transitionDelay: `${Math.min(i * 70, 420)}ms` }"
+          >
             <div class="fc-icon"><Icon :icon="card.icon" /></div>
             <h3>{{ t(`storefront.about.cards.${card.key}.title`) }}</h3>
             <p>{{ t(`storefront.about.cards.${card.key}.body`) }}</p>
           </div>
         </div>
 
-        <h2 class="fc-section-title">{{ t('storefront.about.storyTitle') }}</h2>
-        <div class="fc-story">
+        <h2 class="fc-section-title sf-reveal-up">{{ t('storefront.about.storyTitle') }}</h2>
+        <div class="fc-story sf-reveal-up">
           <p>{{ t('storefront.about.storyP1') }}</p>
           <p>{{ t('storefront.about.storyP2') }}</p>
           <p>{{ t('storefront.about.storyP3') }}</p>
         </div>
 
-        <div class="fc-cta-bar">
+        <div class="fc-cta-bar sf-reveal-up">
           <p>{{ t('storefront.about.ctaText') }}</p>
           <div class="fc-cta-actions">
             <RouterLink to="/products" class="fc-btn-primary">

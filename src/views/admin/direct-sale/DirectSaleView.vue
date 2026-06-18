@@ -408,7 +408,6 @@ onMounted(() => {
                   <div class="pos-card-brand">{{ product.brand }}</div>
                   <div class="pos-card-model">{{ product.label }}</div>
                   <div class="pos-card-footer">
-                    <span class="pos-card-price">{{ formatCurrency(product.selling_price) }}</span>
                     <span class="pos-card-stock">{{ product.stock_quantity }} {{ t('pos.left') }}</span>
                   </div>
                   <button

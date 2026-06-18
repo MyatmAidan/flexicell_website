@@ -13,8 +13,8 @@ defineProps<{
 <template>
   <RouterLink
     :to="`/blog/${blog.id}`"
-    class="sf-blog-card sf-reveal"
-    :class="{ 'sf-visible': animate !== false }"
+    class="sf-blog-card sf-reveal-up"
+    :class="{ 'sf-visible': animate === false }"
     :style="index != null ? { transitionDelay: `${Math.min(index * 80, 400)}ms` } : undefined"
   >
     <div class="sf-blog-thumb">

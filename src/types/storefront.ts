@@ -38,6 +38,16 @@ export interface ProductSearchResult {
   brands: StorefrontBrand[]
 }
 
+export interface ProductColor {
+  name: string
+  value: string | null
+}
+
+export interface ProductSpec {
+  key: string
+  value: string
+}
+
 export interface ProductDetail {
   id: number
   model_name: string
@@ -45,11 +55,14 @@ export interface ProductDetail {
   category_name: string
   product_type: string
   description: string | null
+  processor: string | null
+  battery_capacity: number | string | null
+  release_year: number | string | null
   selling_price: number
   stock_quantity: number
   images: string[]
-  available_colors: string[]
-  specifications: Record<string, string> | string[]
+  available_colors: ProductColor[]
+  specifications: ProductSpec[]
 }
 
 export interface BlogDetail {

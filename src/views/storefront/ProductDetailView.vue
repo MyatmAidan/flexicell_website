@@ -24,10 +24,29 @@ onMounted(async () => {
 })
 
 const specs = computed(() => {
-  const s = product.value?.specifications
-  if (!s) return []
-  if (Array.isArray(s)) return s.map((line, i) => ({ key: String(i), value: line }))
-  return Object.entries(s).map(([key, value]) => ({ key, value }))
+  const p = product.value
+  if (!p) return []
+
+  const rows: { key: string; value: string }[] = []
+  if (p.processor) {
+    rows.push({ key: t('storefront.product.processor'), value: p.processor })
+  }
+  if (p.battery_capacity) {
+    rows.push({ key: t('storefront.product.battery'), value: `${p.battery_capacity} mAh` })
+  }
+  if (p.release_year) {
+    rows.push({ key: t('storefront.product.releaseYear'), value: String(p.release_year) })
+  }
+  if (p.product_type) {
+    rows.push({
+      key: t('storefront.product.type'),
+      value: p.product_type === 'second hand' ? t('storefront.product.typeSecondHand') : t('storefront.product.typeNew'),
+    })
+  }
+  for (const spec of p.specifications ?? []) {
+    if (spec?.value) rows.push({ key: spec.key, value: spec.value })
+  }
+  return rows
 })
 </script>
 
@@ -80,17 +99,25 @@ const specs = computed(() => {
               {{ product.stock_quantity > 0 ? product.stock_quantity : t('storefront.soldOut') }}
             </p>
 
-            <div v-if="product.available_colors?.length" style="margin-top: 1rem">
-              <strong>{{ t('storefront.product.colors') }}:</strong>
-              {{ product.available_colors.join(', ') }}
+            <div v-if="product.available_colors?.length" class="sf-color-row">
+              <strong>{{ t('storefront.product.colors') }}</strong>
+              <div class="sf-color-chips">
+                <span v-for="color in product.available_colors" :key="color.name" class="sf-color-chip">
+                  <i v-if="color.value" :style="{ background: color.value }" />
+                  {{ color.name }}
+                </span>
+              </div>
             </div>
 
-            <ul v-if="specs.length" class="sf-spec-list">
-              <li v-for="spec in specs" :key="spec.key">
-                <strong>{{ spec.key }}</strong>
-                <span>{{ spec.value }}</span>
-              </li>
-            </ul>
+            <div v-if="specs.length" class="sf-spec-block">
+              <h2>{{ t('storefront.product.specs') }}</h2>
+              <ul class="sf-spec-list">
+                <li v-for="(spec, i) in specs" :key="`${spec.key}-${i}`">
+                  <strong>{{ spec.key }}</strong>
+                  <span>{{ spec.value }}</span>
+                </li>
+              </ul>
+            </div>
 
             <RouterLink to="/contact" class="sf-btn sf-btn-primary" style="margin-top: 1.5rem">
               {{ t('storefront.product.inquire') }}

@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Icon } from '@iconify/vue'
 import PageCard from '@/components/ui/PageCard.vue'
+import SearchSelect from '@/components/ui/SearchSelect.vue'
 import { supplierPurchasesApi } from '@/api/supplierPurchases'
 import { suppliersApi, type Supplier } from '@/api/suppliers'
 import { useNotify } from '@/composables/useNotify'
@@ -19,10 +20,8 @@ interface VariantResult {
 
 interface LineItem {
   uid: number
-  search: string
+  variant_id: number | ''
   variant: VariantResult | null
-  results: VariantResult[]
-  searching: boolean
   quantity: number
   unit_cost: number
 }
@@ -32,6 +31,7 @@ const router = useRouter()
 const { success, error: notifyError } = useNotify()
 
 const suppliers = ref<Supplier[]>([])
+const variants = ref<VariantResult[]>([])
 const saving = ref(false)
 const nextUid = ref(1)
 const lines = ref<LineItem[]>([])
@@ -52,15 +52,18 @@ const grandTotal = computed(() =>
   Math.max(0, subtotal.value + Number(form.value.tax_amount) - Number(form.value.discount_amount)),
 )
 
-let searchTimers: Record<number, ReturnType<typeof setTimeout>> = {}
+const variantOptions = computed(() =>
+  variants.value.map((v) => ({
+    id: v.id,
+    label: `${v.label} (${t('purchases.stock')}: ${v.stock})`,
+  })),
+)
 
 function addLine() {
   lines.value.push({
     uid: nextUid.value++,
-    search: '',
+    variant_id: '',
     variant: null,
-    results: [],
-    searching: false,
     quantity: 1,
     unit_cost: 0,
   })
@@ -70,39 +73,28 @@ function removeLine(uid: number) {
   lines.value = lines.value.filter((l) => l.uid !== uid)
 }
 
-function selectVariant(line: LineItem, variant: VariantResult) {
+function onVariantChange(line: LineItem, id: number | '') {
+  line.variant_id = id
+  const variant = variants.value.find((v) => v.id === Number(id)) ?? null
   line.variant = variant
-  line.search = variant.label
-  line.results = []
-  if (variant.price != null && line.unit_cost <= 0) {
+  if (variant?.price != null && line.unit_cost <= 0) {
     line.unit_cost = variant.price
   }
-}
-
-async function searchVariants(line: LineItem, q: string) {
-  line.search = q
-  line.variant = null
-  if (searchTimers[line.uid]) clearTimeout(searchTimers[line.uid])
-  if (q.length < 2) {
-    line.results = []
-    return
-  }
-  searchTimers[line.uid] = setTimeout(async () => {
-    line.searching = true
-    try {
-      const res = await supplierPurchasesApi.searchVariants(q)
-      line.results = (res.data ?? []) as VariantResult[]
-    } catch {
-      line.results = []
-    } finally {
-      line.searching = false
-    }
-  }, 300)
 }
 
 async function loadSuppliers() {
   const res = await suppliersApi.list({ per_page: 500, page: 1 })
   if (res.success) suppliers.value = res.data ?? []
+}
+
+async function loadVariants() {
+  try {
+    const res = await supplierPurchasesApi.searchVariants('', 500)
+    variants.value = (res.data ?? []) as VariantResult[]
+  } catch {
+    variants.value = []
+    notifyError(t('purchases.variantLoadError'))
+  }
 }
 
 async function save() {
@@ -139,6 +131,7 @@ async function save() {
 
 onMounted(() => {
   loadSuppliers()
+  loadVariants()
   addLine()
 })
 </script>
@@ -203,22 +196,15 @@ onMounted(() => {
             </thead>
             <tbody>
               <tr v-for="line in lines" :key="line.uid">
-                <td class="autocomplete-cell">
-                  <input
-                    :value="line.search"
-                    type="text"
-                    :placeholder="t('purchases.searchVariant')"
-                    autocomplete="off"
-                    @input="searchVariants(line, ($event.target as HTMLInputElement).value)"
+                <td class="variant-cell">
+                  <SearchSelect
+                    :model-value="line.variant_id"
+                    :options="variantOptions"
+                    :placeholder="t('purchases.selectVariant')"
+                    :search-placeholder="t('purchases.searchVariant')"
+                    :empty-text="t('common.noData')"
+                    @update:model-value="(id) => onVariantChange(line, id)"
                   />
-                  <div v-if="line.searching" class="autocomplete-hint">{{ t('common.loading') }}</div>
-                  <ul v-else-if="line.results.length" class="autocomplete-list">
-                    <li v-for="v in line.results" :key="v.id">
-                      <button type="button" @click="selectVariant(line, v)">
-                        {{ v.label }} <small>({{ t('purchases.stock') }}: {{ v.stock }})</small>
-                      </button>
-                    </li>
-                  </ul>
                 </td>
                 <td><input v-model.number="line.quantity" type="number" min="1" max="500" class="input-sm" /></td>
                 <td><input v-model.number="line.unit_cost" type="number" min="0" class="input-sm" /></td>
@@ -258,43 +244,8 @@ onMounted(() => {
   justify-content: space-between;
   margin-bottom: 0.75rem;
 }
-.autocomplete-cell {
-  position: relative;
+.variant-cell {
   min-width: 280px;
-}
-.autocomplete-cell input {
-  width: 100%;
-}
-.autocomplete-list {
-  list-style: none;
-  position: absolute;
-  z-index: 10;
-  left: 0;
-  right: 0;
-  background: var(--fc-surface);
-  border: 1px solid var(--fc-border);
-  border-radius: 6px;
-  max-height: 200px;
-  overflow-y: auto;
-  box-shadow: var(--fc-shadow);
-}
-.autocomplete-list button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 0.5rem 0.75rem;
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 0.8125rem;
-}
-.autocomplete-list button:hover {
-  background: var(--fc-bg);
-}
-.autocomplete-hint {
-  font-size: 0.75rem;
-  color: var(--fc-text-muted);
-  padding: 0.25rem 0;
 }
 .input-sm {
   width: 100px;

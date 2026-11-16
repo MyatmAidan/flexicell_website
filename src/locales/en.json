@@ -534,7 +534,9 @@
     "lineItems": "Line Items",
     "addLine": "Add Line",
     "variant": "Product Variant",
+    "selectVariant": "Select product variant",
     "searchVariant": "Search variant by model, RAM, storage, color…",
+    "variantLoadError": "Could not load product variants",
     "stock": "Stock",
     "qty": "Qty",
     "unitCost": "Unit Cost",
@@ -752,7 +754,14 @@
     "product": {
       "stock": "Available stock",
       "colors": "Colors",
-      "inquire": "Contact to Buy"
+      "inquire": "Contact to Buy",
+      "specs": "Model specifications",
+      "processor": "Processor",
+      "battery": "Battery",
+      "releaseYear": "Release year",
+      "type": "Condition",
+      "typeNew": "New",
+      "typeSecondHand": "Second-hand"
     },
     "blog": {
       "title": "Blog",

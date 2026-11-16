@@ -17,7 +17,7 @@ npm install
 npm run dev
 ```
 
-Default dev server: `http://localhost:5173`
+Default dev server: `http://localhost:3000`
 
 Make sure **flexicell_api** is running (default `http://localhost:8000`).
 

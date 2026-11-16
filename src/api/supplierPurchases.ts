@@ -39,5 +39,5 @@ export const supplierPurchasesApi = {
   create: (data: Record<string, unknown>) => apiPost<SupplierPurchase>(BASE, data),
   receive: (id: number, data: Record<string, unknown>) => apiPost(`${BASE}/${id}/receive`, data),
   delete: (id: number) => apiDelete(`${BASE}/${id}`),
-  searchVariants: (q: string) => apiGet<unknown[]>(`${BASE}/search-variants`, { q }),
+  searchVariants: (q = '', limit = 500) => apiGet<unknown[]>(`${BASE}/search-variants`, { q, limit }),
 }

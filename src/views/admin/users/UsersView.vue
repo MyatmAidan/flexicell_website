@@ -160,14 +160,14 @@ async function remove(user: User) {
       </template>
       <template #cell-created_at="{ value }">{{ formatDate(value as string) }}</template>
       <template #actions="{ item }">
-        <RouterLink
+        <!-- <RouterLink
           v-if="hasAny('users.update')"
           :to="`/users/${(item as User).id}/permissions`"
           class="btn-icon"
           :title="t('users.permissions')"
         >
           <Icon icon="solar:shield-keyhole-linear" />
-        </RouterLink>
+        </RouterLink> -->
         <button v-if="hasAny('users.update')" type="button" class="btn-icon" @click="openEdit(item as User)">
           <Icon icon="solar:pen-linear" />
         </button>

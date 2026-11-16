@@ -532,7 +532,9 @@
     "lineItems": "ဝယ်ယူမည့်ပစ္စည်းများ",
     "addLine": "ပစ္စည်းပေါင်းထည့်မည်",
     "variant": "ထုတ်ကုန် မျိုးကွဲ",
+    "selectVariant": "ထုတ်ကုန် မျိုးကွဲ ရွေးပါ",
     "searchVariant": "မော်ဒယ်၊ RAM၊ Storage၊ အရောင်တို့ဖြင့် မျိုးကွဲကို ရှာရန်...",
+    "variantLoadError": "ထုတ်ကုန် မျိုးကွဲများကို ရယူ၍မရပါ",
     "stock": "လက်ကျန်",
     "qty": "အရေအတွက်",
     "unitCost": "ခုနှုန်း",
@@ -723,7 +725,14 @@
     "product": {
       "stock": "ရရှိနိုင်သော stock",
       "colors": "အရောင်များ",
-      "inquire": "ဝယ်ယူရန် ဆက်သွယ်ပါ"
+      "inquire": "ဝယ်ယူရန် ဆက်သွယ်ပါ",
+      "specs": "မော်ဒယ် အချက်အလက်",
+      "processor": "Processor",
+      "battery": "ဘက်ထရီ",
+      "releaseYear": "ထုတ်လုပ်သည့်နှစ်",
+      "type": "အခြေအနေ",
+      "typeNew": "အသစ်",
+      "typeSecondHand": "Second-hand"
     },
     "blog": {
       "title": "ဘလော့",

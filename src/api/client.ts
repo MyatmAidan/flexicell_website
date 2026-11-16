@@ -74,7 +74,18 @@ export async function apiDelete<T>(url: string): Promise<ApiResponse<T>> {
 
 export async function apiPostForm<T>(url: string, formData: FormData): Promise<ApiResponse<T>> {
   const { data } = await api.post<ApiResponse<T>>(url, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
+    headers: { 'Content-Type': undefined },
+    transformRequest: [
+      (body, headers) => {
+        if (headers && typeof (headers as { delete?: (name: string) => void }).delete === 'function') {
+          ;(headers as { delete: (name: string) => void }).delete('Content-Type')
+        } else if (headers) {
+          delete (headers as Record<string, unknown>)['Content-Type']
+          delete (headers as Record<string, unknown>)['content-type']
+        }
+        return body
+      },
+    ],
   })
   return data
 }
